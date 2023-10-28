@@ -1,0 +1,59 @@
+class Estado:
+    def __init__(self, ubicacion_robot, ubicacion_objetivo, objeto_en_robot):
+        self.ubicacion_robot = ubicacion_robot
+        self.ubicacion_objetivo = ubicacion_objetivo
+        self.objeto_en_robot = objeto_en_robot
+
+class Accion:
+    def __init__(self, nombre, precondiciones, efectos):
+        self.nombre = nombre
+        self.precondiciones = precondiciones
+        self.efectos = efectos
+
+def aplicar_efecto(estado, efecto):
+    nuevo_estado = Estado(estado.ubicacion_robot, estado.ubicacion_objetivo, estado.objeto_en_robot)
+    if efecto[0] == "mover_robot":
+        nuevo_estado.ubicacion_robot = efecto[1]
+    elif efecto[0] == "mover_objetivo":
+        nuevo_estado.ubicacion_objetivo = efecto[1]
+    elif efecto[0] == "agarrar_objeto":
+        nuevo_estado.objeto_en_robot = efecto[1]
+    return nuevo_estado
+
+def planificar_strips(estado_inicial, estado_objetivo, acciones):
+    plan = []
+    estado_actual = estado_inicial
+
+    while estado_actual != estado_objetivo:
+        accion_aplicable = None
+        for accion in acciones:
+            if all(precondicion in estado_actual.__dict__.values() for precondicion in accion.precondiciones):
+                accion_aplicable = accion
+                break
+
+        if accion_aplicable is None:
+            print("No se puede planificar.")
+            break
+
+        plan.append(accion_aplicable)
+        estado_actual = aplicar_efecto(estado_actual, accion_aplicable.efectos)
+
+    return plan
+
+# Definir acciones
+mover_robot = Accion("mover_robot", ["ubicacion_robot", "ubicacion_objetivo"], ["mover_robot", "ubicacion_objetivo"])
+mover_objetivo = Accion("mover_objetivo", ["ubicacion_objetivo"], ["mover_objetivo", "ubicacion_objetivo"])
+agarrar_objeto = Accion("agarrar_objeto", ["ubicacion_robot", "ubicacion_objetivo"], ["agarrar_objeto", "objeto_en_robot"])
+
+# Definir estados iniciales y objetivo
+estado_inicial = Estado(ubicacion_robot="A", ubicacion_objetivo="B", objeto_en_robot=None)
+estado_objetivo = Estado(ubicacion_robot="B", ubicacion_objetivo="C", objeto_en_robot="objeto1")
+
+# Planificar con STRIPS
+acciones = [mover_robot, mover_objetivo, agarrar_objeto]
+plan_strips = planificar_strips(estado_inicial, estado_objetivo, acciones)
+
+# Imprimir plan
+print("Plan STRIPS:")
+for accion in plan_strips:
+    print(accion.nombre)
