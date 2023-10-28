@@ -1,0 +1,30 @@
+from pddlpy import DomainProblem
+
+# Define el dominio PDDL
+domain_str = """
+(define (domain simple_domain)
+  (:requirements :strips)
+  (:predicates (at A) (at B))
+  (:action move
+    :parameters ()
+    :precondition (at A)
+    :effect (and (not (at A)) (at B)))
+)
+"""
+
+# Define el problema PDDL
+problem_str = """
+(define (problem simple_problem)
+  (:domain simple_domain)
+  (:objects)
+  (:init (at A))
+  (:goal (at B))
+)
+"""
+
+# Crea una instancia de DomainProblem
+domain_problem = DomainProblem(domain_str, problem_str)
+
+# Imprime el plan
+plan = domain_problem.plan()
+print("Plan:", plan)
