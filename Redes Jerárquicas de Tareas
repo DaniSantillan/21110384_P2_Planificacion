@@ -1,0 +1,32 @@
+class Tarea:
+    def __init__(self, nombre):
+        self.nombre = nombre
+        self.subtareas = []
+
+    def agregar_subtarea(self, subtarea):
+        self.subtareas.append(subtarea)
+
+    def ejecutar(self):
+        print(f"Ejecutando tarea: {self.nombre}")
+        for subtarea in self.subtareas:
+            subtarea.ejecutar()
+
+
+# Crear las tareas
+tarea_principal = Tarea("Tarea Principal")
+
+subtarea1 = Tarea("Subtarea 1")
+subtarea2 = Tarea("Subtarea 2")
+
+subtarea1_1 = Tarea("Subtarea 1.1")
+subtarea1_2 = Tarea("Subtarea 1.2")
+
+# Construir la jerarquía
+tarea_principal.agregar_subtarea(subtarea1)
+tarea_principal.agregar_subtarea(subtarea2)
+
+subtarea1.agregar_subtarea(subtarea1_1)
+subtarea1.agregar_subtarea(subtarea1_2)
+
+# Ejecutar la tarea principal
+tarea_principal.ejecutar()
