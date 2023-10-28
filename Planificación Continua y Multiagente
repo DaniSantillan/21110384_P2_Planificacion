@@ -1,0 +1,50 @@
+class Agente:
+    def __init__(self, nombre, x, y):
+        self.nombre = nombre
+        self.x = x
+        self.y = y
+
+    def mover(self, direccion):
+        if direccion == 'arriba' and self.y > 0:
+            self.y -= 1
+        elif direccion == 'abajo' and self.y < 2:
+            self.y += 1
+        elif direccion == 'izquierda' and self.x > 0:
+            self.x -= 1
+        elif direccion == 'derecha' and self.x < 2:
+            self.x += 1
+
+def objetivo_alcanzado(agente1, agente2, objetivo):
+    return (agente1.x, agente1.y) == objetivo and (agente2.x, agente2.y) == objetivo
+
+# Configuración inicial
+agente1 = Agente("Agente 1", 0, 0)
+agente2 = Agente("Agente 2", 2, 2)
+objetivo = (1, 1)
+
+# Planificación continua y multiagente
+while not objetivo_alcanzado(agente1, agente2, objetivo):
+    # Agente 1 se mueve hacia el objetivo
+    if agente1.x < objetivo[0]:
+        agente1.mover('derecha')
+    elif agente1.x > objetivo[0]:
+        agente1.mover('izquierda')
+    elif agente1.y < objetivo[1]:
+        agente1.mover('abajo')
+    elif agente1.y > objetivo[1]:
+        agente1.mover('arriba')
+
+    # Agente 2 se mueve hacia el objetivo
+    if agente2.x < objetivo[0]:
+        agente2.mover('derecha')
+    elif agente2.x > objetivo[0]:
+        agente2.mover('izquierda')
+    elif agente2.y < objetivo[1]:
+        agente2.mover('abajo')
+    elif agente2.y > objetivo[1]:
+        agente2.mover('arriba')
+
+    # Puedes imprimir el estado actual en cada iteración
+    print(f"Estado actual - {agente1.nombre}: ({agente1.x}, {agente1.y}), {agente2.nombre}: ({agente2.x}, {agente2.y})")
+
+print("¡Objetivo alcanzado!")
