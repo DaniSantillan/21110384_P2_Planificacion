@@ -1,0 +1,27 @@
+import time
+
+def ejecutar_tarea(tarea, tiempo_limite):
+    print(f"Ejecutando tarea: {tarea}")
+    time.sleep(tiempo_limite)  # Simula el tiempo que tarda en ejecutarse la tarea
+
+def vigilancia_y_replanificacion(lista_tareas, tiempo_limite_total):
+    tiempo_inicio = time.time()
+
+    for tarea, tiempo_limite_tarea in lista_tareas:
+        tiempo_actual = time.time() - tiempo_inicio
+
+        if tiempo_actual > tiempo_limite_total:
+            print("¡Se ha superado el tiempo límite total! Replanificando...")
+            # Lógica de replanificación aquí (puede ser agregar más tiempo, reasignar recursos, etc.)
+            break
+
+        ejecutar_tarea(tarea, tiempo_limite_tarea)
+
+if __name__ == "__main__":
+    # Lista de tareas y sus tiempos límite
+    tareas = [("Tarea1", 3), ("Tarea2", 2), ("Tarea3", 4)]
+
+    # Tiempo límite total para completar todas las tareas
+    tiempo_limite_total = 8
+
+    vigilancia_y_replanificacion(tareas, tiempo_limite_total)
