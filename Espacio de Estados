@@ -1,0 +1,17 @@
+class EstadoTresEnLinea:
+    def __init__(self, tablero):
+        self.tablero = tablero
+
+    def imprimir_tablero(self):
+        for fila in self.tablero:
+            print(" ".join(fila))
+            
+# Ejemplo de uso
+tablero_inicial = [
+    [' ', ' ', ' '],
+    [' ', ' ', ' '],
+    [' ', ' ', ' ']
+]
+
+estado_inicial = EstadoTresEnLinea(tablero_inicial)
+estado_inicial.imprimir_tablero()
