@@ -1,0 +1,38 @@
+class Accion:
+    def __init__(self, nombre, precondiciones, efectos):
+        self.nombre = nombre
+        self.precondiciones = precondiciones
+        self.efectos = efectos
+
+def planificacion_orden_parcial(acciones):
+    acciones_realizadas = []
+    
+    while acciones:
+        accion_realizable = None
+        
+        for accion in acciones:
+            if all(precondicion in acciones_realizadas for precondicion in accion.precondiciones):
+                accion_realizable = accion
+                break
+        
+        if accion_realizable:
+            acciones_realizadas.append(accion_realizable)
+            acciones.remove(accion_realizable)
+        else:
+            print("No se puede encontrar un orden parcial.")
+            break
+    
+    return acciones_realizadas
+
+# Ejemplo de uso
+accion1 = Accion("A", [], ["p"])
+accion2 = Accion("B", ["p"], ["q"])
+accion3 = Accion("C", ["q"], ["r"])
+
+acciones = [accion1, accion2, accion3]
+
+orden_parcial = planificacion_orden_parcial(acciones)
+
+print("Orden parcial de acciones:")
+for accion in orden_parcial:
+    print(accion.nombre)
