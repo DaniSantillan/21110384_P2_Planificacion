@@ -1,0 +1,50 @@
+from pysat.solvers import Glucose3
+
+def satplan(init, goal, actions):
+    # Inicializar el solver SAT
+    solver = Glucose3()
+
+    # Crear variables proposicionales para los estados y acciones
+    propositions = set(init + goal)
+    action_variables = set([action['name'] for action in actions])
+    all_variables = propositions.union(action_variables)
+
+    # Asignar un número único a cada variable
+    variable_mapping = {var: i + 1 for i, var in enumerate(all_variables)}
+
+    # Agregar cláusulas para la inicialización
+    for prop in init:
+        solver.add_clause([variable_mapping[prop]])
+
+    # Agregar cláusulas para el objetivo
+    for prop in goal:
+        solver.add_clause([-variable_mapping[prop]])
+
+    # Agregar cláusulas para las acciones
+    for action in actions:
+        preconditions = [variable_mapping[pre] for pre in action['preconditions']]
+        effects = [variable_mapping[eff] for eff in action['effects']]
+        solver.add_clause([-variable_mapping[action['name']]])
+        for pre in preconditions:
+            solver.add_clause([pre, -variable_mapping[action['name']]])
+        for eff in effects:
+            solver.add_clause([eff, variable_mapping[action['name']]])
+
+    # Resolver el problema SAT
+    if solver.solve():
+        # Imprimir el plan encontrado
+        plan = [var for var in solver.get_model() if var > 0 and all_variables[var - 1] in action_variables]
+        return [action for action in actions if variable_mapping[action['name']] in plan]
+    else:
+        return None
+
+# Ejemplo de uso
+initial_state = ['A']
+goal_state = ['C']
+available_actions = [
+    {'name': 'Action1', 'preconditions': ['A'], 'effects': ['B']},
+    {'name': 'Action2', 'preconditions': ['B'], 'effects': ['C']}
+]
+
+result = satplan(initial_state, goal_state, available_actions)
+print("Plan encontrado:", result)
