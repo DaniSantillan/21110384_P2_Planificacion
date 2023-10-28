@@ -1,0 +1,27 @@
+from graphplan import Action, Problem, GraphPlan
+
+# Definir las acciones posibles
+actions = [
+    Action('HervirAgua', preconditions={'NoHervidoAgua'}, effects={'HervidoAgua'}),
+    Action('AgregarTe', preconditions={'HervidoAgua', 'TazaLimpia'}, effects={'TeAgregado'}),
+    Action('Revolver', preconditions={'TeAgregado'}, effects={'TeRevuelto'}),
+    Action('ServirTaza', preconditions={'TeRevuelto'}, effects={'TazaServida'}),
+]
+
+# Definir el problema inicial y objetivo
+initial_state = {'NoHervidoAgua', 'TazaLimpia'}
+goal_state = {'TazaServida'}
+
+# Crear un problema de planificación
+problem = Problem(initial_state, goal_state, actions)
+
+# Resolver el problema utilizando GraphPlan
+graphplan = GraphPlan()
+solution = graphplan.solve(problem)
+
+# Imprimir la solución
+if solution:
+    for i, level in enumerate(solution):
+        print(f'Nivel {i}: {level}')
+else:
+    print('No se encontró solución.')
